@@ -4,7 +4,7 @@ import { useState } from "react";
 import { mockFiles } from "../lib/mock-data";
 import { Folder, FileIcon, Upload, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../components/ui/button";
+import { Button } from "~/components/ui/button";
 
 export default function GoogleDriveClone() {
   const [currentFolder, setCurrentFolder] = useState<string | null>(null);
