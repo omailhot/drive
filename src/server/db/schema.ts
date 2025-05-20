@@ -1,27 +1,32 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
+import { bigint, text, index, singlestoreTableCreator } from "drizzle-orm/singlestore-core";
 
-import { sql } from "drizzle-orm";
-import { index, sqliteTableCreator } from "drizzle-orm/sqlite-core";
+export const createTable = singlestoreTableCreator(
+  (name) => `drive_${name}`
+);
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = sqliteTableCreator((name) => `drive_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: d.text({ length: 256 }),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
-      .notNull(),
-    updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-  }),
-  (t) => [index("name_idx").on(t.name)],
+export const files = createTable(
+  "files_table",
+  {
+    id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+    name: text("name").notNull(),
+    size: text("size").notNull(),
+    url: text("url").notNull(),
+    parent: bigint("parent", { mode: "number", unsigned: true }).notNull(),
+  }, 
+  (t) => {
+    return [index("parent_index").on(t.parent)];
+  }
+);
+
+export const folders = createTable(
+  "folders_table",
+  {
+    id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+    name: text("name").notNull(),
+    parent: bigint("parent", { mode: "number", unsigned: true }),
+  }, 
+  (t) => {
+    return [index("parent_index").on(t.parent)];
+  }
 );
