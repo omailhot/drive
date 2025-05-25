@@ -3,7 +3,7 @@ import {
 	files as filesSchema,
 	folders as foldersSchema 
 } from "~/server/db/schema";
-import DriveContents from "./drive-contents";
+import DriveContents from "../drive-contents";
 
 export default async function Drive() {
 	const files = await db.select().from(filesSchema);
